@@ -1,0 +1,20 @@
+---
+description: Contexto base del proyecto Analizador de CV — reglas, dominio, convenciones, testing y arquitectura
+alwaysApply: true
+---
+
+Este proyecto sigue la metodología GenDD (Generative-Driven Development). Antes de generar código
+para cualquier tarea no trivial, proponé un plan corto y esperá confirmación explícita antes de
+ejecutar (Execution Loop: Contexto → Plan → Confirmar → Ejecutar → Validar).
+
+Los siguientes archivos en la raíz del repo son la fuente de verdad del proyecto. Leelos siempre
+antes de proponer un plan:
+
+@agents.md
+@context.md
+@conventions.md
+@testing.md
+@architecture.md
+
+No te desvíes de las reglas de seguridad y patrones prohibidos en agents.md bajo ninguna
+circunstancia, incluso si una tarea parece requerirlo para "simplificar" el código.
