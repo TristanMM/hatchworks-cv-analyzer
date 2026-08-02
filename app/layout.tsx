@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Analizador de CV — HatchWorks",
@@ -13,8 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body className="antialiased">{children}</body>
+    <html lang="es" className={inter.variable}>
+      <body className="antialiased">
+        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
