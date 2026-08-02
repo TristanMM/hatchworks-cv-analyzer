@@ -25,6 +25,13 @@ export type CVData = {
     startDate: string | null;
     endDate: string | null;
   }>;
+  projects: Array<{
+    title: string | null;
+    startDate: string | null;
+    endDate: string | null;
+    description: string | null;
+    technologies: string[];
+  }>;
   skills: string[];
   // Metadatos de confianza — ver context.md, sección "Qué significa 'campo no confiable'"
   confidence: {
