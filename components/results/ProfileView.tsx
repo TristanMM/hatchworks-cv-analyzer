@@ -29,7 +29,7 @@ export function ProfileView({ data }: ProfileViewProps) {
   const displayName = data.name?.trim();
 
   return (
-    <header className="w-full rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
+    <header className="w-full rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8 print:break-inside-avoid">
       {displayName && (
         <div className="flex items-center gap-4">
           <span
@@ -112,7 +112,8 @@ function TaglineBlock({ text }: { text: string }) {
     <>
       <p
         ref={taglineRef}
-        className={`mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground ${
+        data-capture-clamp
+        className={`mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground print:line-clamp-none ${
           isExpanded ? "" : "line-clamp-3"
         }`}
       >
@@ -121,9 +122,10 @@ function TaglineBlock({ text }: { text: string }) {
       {isOverflowing && (
         <button
           type="button"
+          data-capture-hide
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-expanded={isExpanded}
-          className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover"
+          className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover print:hidden"
         >
           {isExpanded ? "Ver menos" : "Ver más"}
         </button>

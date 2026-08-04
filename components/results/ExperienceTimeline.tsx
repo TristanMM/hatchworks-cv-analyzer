@@ -50,7 +50,7 @@ function TimelineItem({ entry }: { entry: TimelineEntry }) {
   const { title, subtitle } = resolveTitleAndSubtitle(entry.title, entry.subtitle);
 
   return (
-    <li className="relative pl-6">
+    <li className="relative pl-6 print:break-inside-avoid">
       <span
         className={`absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-surface ${
           entry.kind === "experience" ? "bg-primary" : "bg-education"

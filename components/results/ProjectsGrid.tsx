@@ -21,17 +21,19 @@ export function ProjectsGrid({ projects }: ProjectsGridProps) {
   if (visibleProjects.length === 0) return null;
 
   return (
-    <section className="w-full rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
-      <h2 className="mb-6 flex items-center gap-2 text-lg font-semibold text-foreground">
+    <div className="w-full">
+      <h2 className="mb-6 flex items-center gap-2 text-lg font-semibold text-foreground print:mb-4 print:break-after-avoid">
         <FolderIcon className="h-5 w-5 text-primary" />
         Proyectos
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {visibleProjects.map(({ project, index }) => (
-          <ProjectCard key={`project-${index}`} project={project} />
-        ))}
-      </div>
-    </section>
+      <section className="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8 print:break-inside-auto">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 print:flex print:flex-wrap">
+          {visibleProjects.map(({ project, index }) => (
+            <ProjectCard key={`project-${index}`} project={project} />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -65,7 +67,7 @@ function ProjectCard({ project }: { project: CVData["projects"][number] }) {
   }, [description, isExpanded]);
 
   return (
-    <article className="flex flex-col rounded-lg border border-border bg-surface p-4 shadow-card">
+    <article className="flex flex-col rounded-lg border border-border bg-surface p-4 shadow-card print:w-1/3 print:break-inside-avoid">
       {title && (
         <h3 className="text-base font-semibold text-foreground">{title}</h3>
       )}
@@ -76,7 +78,8 @@ function ProjectCard({ project }: { project: CVData["projects"][number] }) {
         <>
           <p
             ref={descriptionRef}
-            className={`mt-2 text-sm leading-relaxed text-muted-foreground ${
+            data-capture-clamp
+            className={`mt-2 text-sm leading-relaxed text-muted-foreground print:line-clamp-none ${
               isExpanded ? "" : "line-clamp-3"
             }`}
           >
@@ -85,9 +88,10 @@ function ProjectCard({ project }: { project: CVData["projects"][number] }) {
           {isOverflowing && (
             <button
               type="button"
+              data-capture-hide
               onClick={() => setIsExpanded((prev) => !prev)}
               aria-expanded={isExpanded}
-              className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover"
+              className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover print:hidden"
             >
               {isExpanded ? "Ver menos" : "Ver más"}
             </button>

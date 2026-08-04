@@ -55,3 +55,12 @@ body {
   background-color: var(--color-background);
   color: var(--color-foreground);
 }
+
+/* Impresión del rediseño (window.print): sin esto, la mayoría de navegadores
+   omiten los colores de fondo al imprimir para ahorrar tinta. */
+@media print {
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

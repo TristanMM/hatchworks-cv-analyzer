@@ -4,10 +4,14 @@ export type StatsCardsProps = {
   data: CVData;
 };
 
-type StatCardProps = {
+type StatItem = {
   value: string;
   label: string;
   caption?: string;
+};
+
+type StatCardProps = StatItem & {
+  printWidthClass: string;
 };
 
 /**
@@ -19,7 +23,7 @@ export function StatsCards({ data }: StatsCardsProps) {
   const educationStat = getMostRecentEducationStat(data.education);
   const completeness = calculateCompleteness(data.confidence);
 
-  const stats: StatCardProps[] = [
+  const stats: StatItem[] = [
     ...getExperienceProjectStats(data),
     { value: String(skillCount), label: "Habilidades" },
     {
@@ -30,26 +34,40 @@ export function StatsCards({ data }: StatsCardsProps) {
     {
       value: `${completeness}%`,
       label: "Confianza de extracción",
-      caption: "Qué tan claro se pudo leer cada dato",
     },
   ];
 
   return (
     <div
-      className={`grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 ${
+      className={`grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 print:flex print:flex-wrap print:gap-3 ${
         stats.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"
       }`}
     >
       {stats.map((stat) => (
-        <StatCard key={stat.label} {...stat} />
+        <StatCard
+          key={stat.label}
+          {...stat}
+          printWidthClass={
+            stats.length === 5
+              ? "print:w-[calc(20%-0.6rem)]"
+              : "print:w-[calc(25%-0.5625rem)]"
+          }
+        />
       ))}
     </div>
   );
 }
 
-function StatCard({ value, label, caption }: StatCardProps) {
+function StatCard({
+  value,
+  label,
+  caption,
+  printWidthClass,
+}: StatCardProps) {
   return (
-    <div className="rounded-lg border-x border-b border-border border-t-2 border-t-primary bg-surface p-4 shadow-card">
+    <div
+      className={`rounded-lg border-x border-b border-border border-t-2 border-t-primary bg-surface p-4 shadow-card print:break-inside-avoid ${printWidthClass}`}
+    >
       <p className="break-words text-base font-bold leading-tight tabular-nums text-foreground sm:text-lg">
         {value}
       </p>
@@ -61,7 +79,7 @@ function StatCard({ value, label, caption }: StatCardProps) {
   );
 }
 
-function getExperienceProjectStats(data: CVData): StatCardProps[] {
+function getExperienceProjectStats(data: CVData): StatItem[] {
   const hasExperience = data.experience.length > 0;
   const hasProjects = data.projects.length > 0;
 
