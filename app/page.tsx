@@ -31,7 +31,7 @@ export default function HomePage() {
         method: "POST",
         body: formData,
       });
-      const body: ApiResult<CVData> = await response.json();
+      const body = await parseExtractResponse(response);
       setResult(body);
     } catch (error) {
       console.error("[HomePage] fallo en la petición a /api/extract:", error);
@@ -157,6 +157,44 @@ export default function HomePage() {
       )}
     </main>
   );
+}
+
+/**
+ * Interpreta la respuesta de /api/extract. Vercel puede rechazar el request
+ * a nivel de plataforma (ej. 413 por payload > 4.5 MB) antes de que nuestra
+ * API route llegue a ejecutarse, devolviendo un body que no es JSON — en ese
+ * caso `response.json()` lanza y hay que mapear el error por status HTTP en
+ * vez de dejar que ese fallo caiga en el network_error genérico.
+ */
+async function parseExtractResponse(
+  response: Response
+): Promise<ApiResult<CVData>> {
+  try {
+    return await response.json();
+  } catch (error) {
+    console.error(
+      "[HomePage] la respuesta de /api/extract no es JSON válido:",
+      error
+    );
+
+    if (response.status === 413) {
+      return {
+        success: false,
+        error: {
+          type: "file_too_large",
+          message: "El archivo supera el tamaño máximo permitido de 4 MB.",
+        },
+      };
+    }
+
+    return {
+      success: false,
+      error: {
+        type: "server_error",
+        message: `El servidor respondió con un error inesperado (${response.status}). Intenta de nuevo.`,
+      },
+    };
+  }
 }
 
 function buildImageFilename(name: string | null | undefined): string {

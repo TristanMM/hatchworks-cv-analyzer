@@ -10,7 +10,7 @@ const MODEL = "claude-haiku-4-5-20251001";
 const MAX_TOKENS = 4096;
 
 // Guarda de costo: un CV normal está muy por debajo de esto. Truncar evita
-// gastar tokens de más con un PDF gigante que igual pasó la validación de 10 MB.
+// gastar tokens de más con un PDF gigante que igual pasó la validación de 4 MB.
 const MAX_INPUT_CHARS = 60000;
 
 const CONFIDENCE_LEVELS = ["high", "low", "missing"] as const;

@@ -24,7 +24,8 @@ La lógica de extracción no se considera terminada hasta que maneje correctamen
 
 ## Pruebas negativas obligatorias
 
-- Subir un archivo de más de X MB (definir límite, ej. 10 MB) → debe rechazarse antes de procesar.
+- Subir un archivo de más de 4 MB (límite alineado con el máximo de payload de Vercel Functions,
+  4.5 MB) → debe rechazarse antes de procesar.
 - Subir un archivo con extensión `.pdf` falsa (contenido que no es realmente un PDF) → debe
   rechazarse por validación de contenido, no solo por extensión.
 - Simular fallo de la API de Claude (timeout o error 5xx) → la UI debe mostrar un estado de error
