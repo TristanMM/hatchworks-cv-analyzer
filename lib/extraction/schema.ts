@@ -13,6 +13,7 @@ import type { CVData } from "@/types/cv";
  */
 export const cvDataSchema: z.ZodType<CVData> = z.object({
   name: z.string().nullable(),
+  summary: z.string().nullable(),
   contact: z.object({
     email: z.string().nullable(),
     phone: z.string().nullable(),

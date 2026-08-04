@@ -15,6 +15,7 @@ es una decisión de arquitectura y debe confirmarse antes de implementarse.
 ```typescript
 type CVData = {
   name: string | null;
+  summary: string | null;
   contact: {
     email: string | null;
     phone: string | null;

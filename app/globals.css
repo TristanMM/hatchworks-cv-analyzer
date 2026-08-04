@@ -1,9 +1,57 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Tipografía */
   --font-sans: var(--font-inter);
+
+  /* Primario — acentos de dashboard */
+  --color-primary: oklch(0.45 0.18 264);
+  --color-primary-hover: oklch(0.4 0.18 264);
+  --color-primary-subtle: oklch(0.96 0.02 264);
+  --color-primary-foreground: oklch(0.99 0 0);
+
+  /* Timeline — tipo educación */
+  --color-education: oklch(0.58 0.14 190);
+
+  /* Neutros — fondo, texto, bordes */
+  --color-background: oklch(0.985 0.002 264);
+  --color-surface: oklch(1 0 0);
+  --color-foreground: oklch(0.21 0.02 264);
+  --color-muted: oklch(0.96 0.005 264);
+  --color-muted-foreground: oklch(0.55 0.02 264);
+  --color-border: oklch(0.9 0.01 264);
+  --color-border-strong: oklch(0.82 0.01 264);
+
+  /* Confianza — indicadores high / low / missing */
+  --color-success: oklch(0.55 0.15 145);
+  --color-success-subtle: oklch(0.96 0.03 145);
+  --color-warning: oklch(0.65 0.15 75);
+  --color-warning-subtle: oklch(0.97 0.03 75);
+  --color-neutral-confidence: oklch(0.6 0.01 264);
+  --color-neutral-confidence-subtle: oklch(0.95 0.005 264);
+
+  /* Error */
+  --color-destructive: oklch(0.55 0.2 25);
+  --color-destructive-subtle: oklch(0.97 0.02 25);
+
+  /* Radios */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 oklch(0.21 0.02 264 / 0.05);
+  --shadow-card:
+    0 1px 3px 0 oklch(0.21 0.02 264 / 0.08),
+    0 1px 2px -1px oklch(0.21 0.02 264 / 0.08);
+  --shadow-elevated:
+    0 4px 6px -1px oklch(0.21 0.02 264 / 0.08),
+    0 2px 4px -2px oklch(0.21 0.02 264 / 0.06);
 }
 
 body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }

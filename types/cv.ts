@@ -5,6 +5,7 @@
  */
 export type CVData = {
   name: string | null;
+  summary: string | null; // parrafo de perfil/resumen profesional, tal como aparece en el CV
   contact: {
     email: string | null;
     phone: string | null;

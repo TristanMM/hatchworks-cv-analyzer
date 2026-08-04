@@ -17,6 +17,7 @@ const CONFIDENCE_LEVELS = ["high", "low", "missing"] as const;
 
 const CONFIDENCE_FIELD_PATHS = [
   "name",
+  "summary",
   "contact.email",
   "contact.phone",
   "contact.location",
@@ -48,9 +49,10 @@ const nullableText = { type: "string" };
 const CV_JSON_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["name", "contact", "experience", "education", "projects", "skills", "confidence"],
+  required: ["name", "summary", "contact", "experience", "education", "projects", "skills", "confidence"],
   properties: {
     name: nullableText,
+    summary: nullableText,
     contact: {
       type: "object",
       additionalProperties: false,
@@ -133,12 +135,17 @@ Reglas obligatorias:
    - "missing": el dato no se encontró en el texto.
    - "low": el dato existe pero es ambiguo, incompleto o de formato inconsistente (por ejemplo una fecha que no se puede interpretar con certeza, o un bloque de texto donde no queda claro qué es el puesto y qué es la empresa).
    - "high": el dato aparece de forma clara e inequívoca.
-5. Responde exclusivamente con el JSON que cumple el schema. Sin explicaciones, sin comentarios, sin bloques de código.`;
+5. Responde exclusivamente con el JSON que cumple el schema. Sin explicaciones, sin comentarios, sin bloques de código.
+6. Idiomas en skills (obligatorio y consistente): si el CV incluye una sección de idiomas (por ejemplo "Idiomas", "Languages", "Language skills" o equivalentes), debes incluir siempre cada idioma listado en el arreglo "skills", además de las demás habilidades técnicas o blandas que extraigas. Formato obligatorio:
+   - Si el CV especifica un nivel para el idioma, usa exactamente "Idioma (Nivel)" — por ejemplo "Español (Nativo)", "Inglés (C1)", "Francés (Intermedio)". Conserva el idioma original del CV.
+   - Si el CV no especifica nivel, incluye solo el nombre del idioma — por ejemplo "Español", "English".
+   - No omitas idiomas de "skills" aunque también aparezcan en otra sección del CV. Esta regla aplica a todos los CVs que tengan sección de idiomas, sin excepción.
+7. Resumen profesional: si el CV tiene una sección de presentación al inicio (por ejemplo "Perfil Profesional", "Summary", "Sobre mí", "Professional Summary", "Objetivo" o equivalentes), extrae ese párrafo tal cual aparece en "summary", sin resumir, parafrasear ni combinarlo con otras secciones. Si el CV no tiene una sección de este tipo, devuelve "" en "summary" (nunca inventes un resumen combinando otras secciones del CV).`;
 
 const STRICT_RETRY_INSTRUCTIONS = `AVISO: tu respuesta anterior no cumplió el schema requerido y fue rechazada.
 
 Este es el último intento. Verifica antes de responder que:
-- Están presentes todas las claves de nivel superior: name, contact, experience, education, skills, confidence.
+- Están presentes todas las claves de nivel superior: name, summary, contact, experience, education, skills, confidence.
 - "contact" incluye email, phone, location y linkedin (usa "" si no aparecen).
 - Cada elemento de "experience" incluye company, role, startDate, endDate y description.
 - Cada elemento de "education" incluye institution, degree, field, startDate y endDate.
@@ -180,6 +187,7 @@ function normalizeEmptyStringsToNull(json: unknown): unknown {
   const data = json as Record<string, unknown>;
 
   data.name = emptyToNull(data.name);
+  data.summary = emptyToNull(data.summary);
   normalizeFields(data.contact, CONTACT_TEXT_FIELDS);
   if (Array.isArray(data.experience)) {
     for (const item of data.experience) normalizeFields(item, EXPERIENCE_TEXT_FIELDS);
