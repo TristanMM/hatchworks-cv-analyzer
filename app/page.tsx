@@ -7,6 +7,7 @@ import { StatsCards } from "@/components/results/StatsCards";
 import { ExperienceTimeline } from "@/components/results/ExperienceTimeline";
 import { ProjectsGrid } from "@/components/results/ProjectsGrid";
 import { SkillsTags } from "@/components/results/SkillsTags";
+import { EditCVModal } from "@/components/results/EditCVModal";
 import { Button } from "@/components/ui/Button";
 import type { ApiResult, CVData } from "@/types/cv";
 
@@ -17,6 +18,7 @@ export default function HomePage() {
   const [downloadImageError, setDownloadImageError] = useState<string | null>(
     null
   );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
 
   const handleFileSelected = async (file: File) => {
@@ -46,6 +48,10 @@ export default function HomePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSaveEdits = (updatedData: CVData) => {
+    setResult({ success: true, data: updatedData });
   };
 
   const handleDownloadImage = async () => {
@@ -129,6 +135,13 @@ export default function HomePage() {
               >
                 {isDownloadingImage ? "Generando imagen..." : "Descargar como imagen"}
               </Button>
+              <Button
+                type="button"
+                onClick={() => setIsEditModalOpen(true)}
+                className="bg-primary text-primary-foreground hover:bg-primary-hover print:hidden"
+              >
+                Editar información
+              </Button>
             </div>
             {downloadImageError && (
               <p className="max-w-sm text-right text-xs font-medium text-destructive print:hidden">
@@ -153,6 +166,13 @@ export default function HomePage() {
             </div>
             <ProjectsGrid projects={result.data.projects} />
           </div>
+          {isEditModalOpen && (
+            <EditCVModal
+              data={result.data}
+              onSave={handleSaveEdits}
+              onClose={() => setIsEditModalOpen(false)}
+            />
+          )}
         </div>
       )}
     </main>

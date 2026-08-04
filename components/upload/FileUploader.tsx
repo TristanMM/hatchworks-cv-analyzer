@@ -9,7 +9,7 @@ export type FileUploaderProps = {
 
 /**
  * Componente de upload con drag & drop (ver architecture.md).
- * Guarda el archivo seleccionado en estado local y valida que sea PDF.
+ * Guarda el archivo seleccionado en estado local y valida que sea PDF o DOCX.
  * TODO: enviar el archivo a /api/extract (todavía no implementado).
  */
 export function FileUploader({ onFileSelected }: FileUploaderProps) {
@@ -69,14 +69,14 @@ export function FileUploader({ onFileSelected }: FileUploaderProps) {
     >
       <input
         type="file"
-        accept=".pdf,application/pdf"
+        accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         className="sr-only"
         onChange={handleInputChange}
       />
       {selectedFile ? (
         <span className="font-medium text-gray-700">{selectedFile.name}</span>
       ) : (
-        <span>Arrastra tu CV en PDF aquí, o haz clic para seleccionarlo</span>
+        <span>Arrastra tu CV en PDF o DOCX aquí, o haz clic para seleccionarlo</span>
       )}
       {error && <span className="mt-2 text-xs text-red-600">{error}</span>}
     </label>

@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ApiResult, CVData } from "@/types/cv";
-import { validatePdfBuffer } from "@/lib/utils/fileValidation";
+import { validateFileBuffer, detectFileFormat } from "@/lib/utils/fileValidation";
 import { parsePdf } from "@/lib/extraction/parsePdf";
+import { parseDocx } from "@/lib/extraction/parseDocx";
 import { extractWithClaude } from "@/lib/extraction/extractWithClaude";
 
 const ERROR_STATUS: Record<string, number> = {
   missing_file: 400,
   invalid_form_data: 400,
   file_too_large: 400,
-  invalid_pdf_signature: 400,
+  invalid_file_signature: 400,
   validation_error: 400,
   no_extractable_text: 422,
   pdf_parse_error: 422,
+  docx_parse_error: 422,
   missing_api_key: 500,
   claude_api_error: 502,
   invalid_claude_response: 502,
@@ -29,7 +31,7 @@ function errorResponse(
 
 /**
  * API route: recibe el archivo subido y orquesta el pipeline de extracción
- * (ver architecture.md): validación server-side -> parsing de PDF -> Claude.
+ * (ver architecture.md): validación server-side -> parsing de PDF/DOCX -> Claude.
  * Cada paso devuelve su propio errorType (ver conventions.md); nada se deja
  * sin capturar (try/catch externo con "unexpected_error" como red final).
  */
@@ -52,12 +54,14 @@ export async function POST(
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const validation = validatePdfBuffer(buffer);
+    const validation = validateFileBuffer(buffer);
     if (!validation.success) {
       return errorResponse(validation.errorType, validation.message);
     }
 
-    const parsed = await parsePdf(buffer);
+    const format = detectFileFormat(buffer, file.name);
+    const parsed =
+      format === "pdf" ? await parsePdf(buffer) : await parseDocx(buffer);
     if (!parsed.success) {
       return errorResponse(parsed.errorType, parsed.message);
     }
