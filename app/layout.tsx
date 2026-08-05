@@ -8,9 +8,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Analizador de CV — HatchWorks",
+  title: "CV Analyzer — HatchWorks",
   description:
-    "Analizador de CV y Visor de Perfil Reimaginado — reto técnico de HatchWorks AI.",
+    "CV Analyzer and Reimagined Profile Viewer — HatchWorks AI technical challenge.",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <body className="antialiased">
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 print:max-w-none print:px-0">
           {children}

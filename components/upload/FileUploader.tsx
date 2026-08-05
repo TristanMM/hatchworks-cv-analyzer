@@ -8,9 +8,9 @@ export type FileUploaderProps = {
 };
 
 /**
- * Componente de upload con drag & drop (ver architecture.md).
- * Guarda el archivo seleccionado en estado local y valida que sea PDF o DOCX.
- * TODO: enviar el archivo a /api/extract (todavía no implementado).
+ * Upload component with drag & drop (see architecture.md).
+ * Stores the selected file in local state and validates that it is PDF or DOCX.
+ * TODO: send the file to /api/extract (not yet implemented).
  */
 export function FileUploader({ onFileSelected }: FileUploaderProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -76,7 +76,7 @@ export function FileUploader({ onFileSelected }: FileUploaderProps) {
       {selectedFile ? (
         <span className="font-medium text-gray-700">{selectedFile.name}</span>
       ) : (
-        <span>Arrastra tu CV en PDF o DOCX aquí, o haz clic para seleccionarlo</span>
+        <span>Drag your PDF or DOCX CV here, or click to select it</span>
       )}
       {error && <span className="mt-2 text-xs text-red-600">{error}</span>}
     </label>

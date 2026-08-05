@@ -4,15 +4,15 @@ export type ParseDocxResult =
   | { success: true; text: string }
   | { success: false; errorType: string; message: string };
 
-// Heurística: un CV real tiene mucho más texto que esto. Un valor por debajo
-// del umbral sugiere un DOCX sin contenido legible (ver testing.md, caso 5).
+// Heuristic: a real CV has much more text than this. A value below the
+// threshold suggests a DOCX with no readable content (see testing.md, case 5).
 const MIN_EXTRACTABLE_TEXT_LENGTH = 40;
 
 /**
- * Extrae el texto crudo de un DOCX usando `mammoth.extractRawText`. Si el
- * texto extraído está vacío o es sospechosamente corto, devuelve un error
- * explícito "no_extractable_text" en vez de un string vacío silencioso (ver
- * testing.md, caso límite análogo al PDF escaneado).
+ * Extracts raw text from a DOCX using `mammoth.extractRawText`. If the
+ * extracted text is empty or suspiciously short, returns an explicit
+ * "no_extractable_text" error instead of a silent empty string (see
+ * testing.md, edge case analogous to scanned PDF).
  */
 export async function parseDocx(file: Buffer): Promise<ParseDocxResult> {
   try {
@@ -23,7 +23,7 @@ export async function parseDocx(file: Buffer): Promise<ParseDocxResult> {
       return {
         success: false,
         errorType: "no_extractable_text",
-        message: "No se pudo extraer texto legible del DOCX.",
+        message: "Could not extract readable text from the DOCX.",
       };
     }
 
@@ -33,7 +33,7 @@ export async function parseDocx(file: Buffer): Promise<ParseDocxResult> {
     return {
       success: false,
       errorType: "docx_parse_error",
-      message: "No se pudo procesar el archivo DOCX.",
+      message: "Could not process the DOCX file.",
     };
   }
 }

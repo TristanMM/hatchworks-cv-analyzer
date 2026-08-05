@@ -5,7 +5,7 @@ export type SkillsTagsProps = {
 };
 
 /**
- * Nube de chips de habilidades (ver context.md).
+ * Skills chip cloud (see context.md).
  */
 export function SkillsTags({ skills }: SkillsTagsProps) {
   const visibleSkills = getVisibleSkills(skills);
@@ -16,7 +16,7 @@ export function SkillsTags({ skills }: SkillsTagsProps) {
     <section className="w-full rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
       <h2 className="mb-6 flex items-center gap-2 text-lg font-semibold text-foreground">
         <ZapIcon className="h-5 w-5 text-primary" />
-        Habilidades
+        Skills
       </h2>
       <div className="flex flex-wrap gap-1.5">
         {visibleSkills.map((skill, index) => (

@@ -15,8 +15,8 @@ type StatCardProps = StatItem & {
 };
 
 /**
- * Fila de tarjetas métricas del dashboard (experiencia/proyectos, habilidades,
- * educación reciente, confianza de extracción).
+ * Dashboard metric cards row (experience/projects, skills, recent education,
+ * extraction confidence).
  */
 export function StatsCards({ data }: StatsCardsProps) {
   const skillCount = data.skills.length;
@@ -25,15 +25,15 @@ export function StatsCards({ data }: StatsCardsProps) {
 
   const stats: StatItem[] = [
     ...getExperienceProjectStats(data),
-    { value: String(skillCount), label: "Habilidades" },
+    { value: String(skillCount), label: "Skills" },
     {
       value: educationStat.value,
-      label: "Educación reciente",
+      label: "Recent education",
       caption: educationStat.caption,
     },
     {
       value: `${completeness}%`,
-      label: "Confianza de extracción",
+      label: "Extraction confidence",
     },
   ];
 
@@ -87,9 +87,9 @@ function getExperienceProjectStats(data: CVData): StatItem[] {
     return [
       {
         value: String(data.experience.length),
-        label: "Experiencias Laborales",
+        label: "Work experience",
       },
-      { value: String(data.projects.length), label: "Proyectos" },
+      { value: String(data.projects.length), label: "Projects" },
     ];
   }
 
@@ -97,16 +97,16 @@ function getExperienceProjectStats(data: CVData): StatItem[] {
     return [
       {
         value: String(data.experience.length),
-        label: "Experiencias Laborales",
+        label: "Work experience",
       },
     ];
   }
 
   if (hasProjects) {
-    return [{ value: String(data.projects.length), label: "Proyectos" }];
+    return [{ value: String(data.projects.length), label: "Projects" }];
   }
 
-  return [{ value: "0", label: "Proyectos" }];
+  return [{ value: "0", label: "Projects" }];
 }
 
 export function calculateCompleteness(confidence: CVData["confidence"]): number {

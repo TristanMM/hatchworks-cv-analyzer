@@ -13,7 +13,7 @@ type VisibleProject = {
 };
 
 /**
- * Cuadrícula de tarjetas de proyectos (ver context.md).
+ * Project cards grid (see context.md).
  */
 export function ProjectsGrid({ projects }: ProjectsGridProps) {
   const visibleProjects = getVisibleProjects(projects);
@@ -24,7 +24,7 @@ export function ProjectsGrid({ projects }: ProjectsGridProps) {
     <div className="w-full">
       <h2 className="mb-6 flex items-center gap-2 text-lg font-semibold text-foreground print:mb-4 print:break-after-avoid">
         <FolderIcon className="h-5 w-5 text-primary" />
-        Proyectos
+        Projects
       </h2>
       <section className="rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8 print:break-inside-auto">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 print:flex print:flex-wrap">
@@ -93,7 +93,7 @@ function ProjectCard({ project }: { project: CVData["projects"][number] }) {
               aria-expanded={isExpanded}
               className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover print:hidden"
             >
-              {isExpanded ? "Ver menos" : "Ver más"}
+              {isExpanded ? "Show less" : "Show more"}
             </button>
           )}
         </>

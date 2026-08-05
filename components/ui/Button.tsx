@@ -10,7 +10,7 @@ const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
 };
 
 /**
- * Botón genérico reutilizable (ver conventions.md — components/ui).
+ * Generic reusable button (see conventions.md — components/ui).
  */
 export function Button({
   variant = "primary",

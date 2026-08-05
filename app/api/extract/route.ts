@@ -30,10 +30,10 @@ function errorResponse(
 }
 
 /**
- * API route: recibe el archivo subido y orquesta el pipeline de extracción
- * (ver architecture.md): validación server-side -> parsing de PDF/DOCX -> Claude.
- * Cada paso devuelve su propio errorType (ver conventions.md); nada se deja
- * sin capturar (try/catch externo con "unexpected_error" como red final).
+ * API route: receives the uploaded file and orchestrates the extraction pipeline
+ * (see architecture.md): server-side validation -> PDF/DOCX parsing -> Claude.
+ * Each step returns its own errorType (see conventions.md); nothing is left
+ * uncaught (outer try/catch with "unexpected_error" as final fallback).
  */
 export async function POST(
   request: NextRequest
@@ -44,12 +44,12 @@ export async function POST(
       formData = await request.formData();
     } catch (error) {
       console.error("[api/extract] fallo al leer el form-data:", error);
-      return errorResponse("invalid_form_data", "No se pudo leer el archivo enviado.");
+      return errorResponse("invalid_form_data", "Could not read the uploaded file.");
     }
 
     const file = formData.get("file");
     if (!(file instanceof File)) {
-      return errorResponse("missing_file", "No se recibió ningún archivo.");
+      return errorResponse("missing_file", "No file was received.");
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -76,7 +76,7 @@ export async function POST(
     console.error("[api/extract] fallo inesperado en el pipeline:", error);
     return errorResponse(
       "unexpected_error",
-      "Ocurrió un error inesperado al procesar el archivo."
+      "An unexpected error occurred while processing the file."
     );
   }
 }

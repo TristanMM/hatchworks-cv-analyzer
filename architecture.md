@@ -1,65 +1,63 @@
-# architecture.md — Arquitectura del sistema
+# architecture.md — System architecture
 
-## Resumen
+## Summary
 
-Next.js (TypeScript, App Router) full-stack desplegado en Vercel. Extracción híbrida: parsing de
-texto del PDF/DOCX + API de Claude (modelo Haiku) para estructurar los campos en JSON, validado con
-Zod. Sin base de datos para el flujo principal. Descarga vía impresión nativa del navegador (PDF) y
-`html2canvas` (PNG).
+Next.js (TypeScript, App Router) full-stack deployed on Vercel. Hybrid extraction: PDF/DOCX text
+parsing + Claude API (Haiku model) to structure fields into JSON, validated with Zod. No database for
+the main flow. Download via native browser print (PDF) and `html2canvas` (PNG).
 
-## Diagrama de flujo
+## Flow diagram
 
 ```mermaid
 flowchart TD
-    A[Usuario: sube CV PDF/DOCX] --> B[Frontend Next.js<br/>Componente de upload]
+    A[User: uploads CV PDF/DOCX] --> B[Next.js Frontend<br/>Upload component]
     B --> C[API Route: /api/extract]
-    C --> D{Validación<br/>tipo/tamaño archivo}
-    D -->|Inválido| E[Error 400<br/>mensaje claro al usuario]
-    D -->|Válido| F[Parser de texto<br/>pdf-parse / mammoth para DOCX]
-    F --> G{¿Se extrajo texto?}
-    G -->|No / vacío<br/>posible escaneo| H[Error controlado<br/>estado alternativo en UI]
-    G -->|Sí| I[Prompt a Claude API<br/>salida JSON estructurada]
-    I --> J{Validación del JSON<br/>con Zod}
-    J -->|Campos faltantes| K[Marcar campo como<br/>no confiable, no fallar]
-    J -->|OK| L[Respuesta estructurada<br/>al frontend]
+    C --> D{Validation<br/>file type/size}
+    D -->|Invalid| E[Error 400<br/>clear message to user]
+    D -->|Valid| F[Text parser<br/>pdf-parse / mammoth for DOCX]
+    F --> G{Was text extracted?}
+    G -->|No / empty<br/>possible scan| H[Controlled error<br/>alternate UI state]
+    G -->|Yes| I[Prompt to Claude API<br/>structured JSON output]
+    I --> J{JSON validation<br/>with Zod}
+    J -->|Missing fields| K[Mark field as<br/>unreliable, do not fail]
+    J -->|OK| L[Structured response<br/>to frontend]
     K --> L
-    L --> M[Vista de resultados<br/>nuevo diseño React]
-    M --> N[Botón Descargar]
-    N --> O[window.print + CSS<br/>para PDF]
-    N --> P[html2canvas<br/>para PNG - extra]
+    L --> M[Results view<br/>new React design]
+    M --> N[Download button]
+    N --> O[window.print + CSS<br/>for PDF]
+    N --> P[html2canvas<br/>for PNG - extra]
 
     style E fill:#fee2e2
     style H fill:#fee2e2
     style K fill:#fef3c7
 ```
 
-## Componentes por capa
+## Components by layer
 
-- **Frontend**: Next.js App Router + TypeScript + Tailwind. Componente de upload con drag & drop,
-  estados de carga, vista de resultados, estados de error por campo.
-- **Backend**: API Routes de Next.js (funciones serverless en Vercel), no un servicio separado.
-- **Extracción**: pipeline en `/lib/extraction` — parsing de texto → prompt a Claude con schema fijo
-  → validación con Zod → normalización de confianza por campo.
-- **Base de datos**: ninguna para el MVP. Flujo completamente stateless.
-- **Autenticación**: ninguna (fuera de alcance del reto).
-- **Descarga**: `window.print()` con hoja de estilos `@media print` dedicada (PDF, nativo, sin
-  dependencias pesadas); `html2canvas` en cliente para PNG (extra).
-- **Manejo de errores**: try/catch en cada paso del pipeline, con `errorType` específico devuelto al
-  frontend (ver `conventions.md`).
-- **Logging**: `console.error` con contexto de paso; Vercel captura logs de función automáticamente.
-  Sin herramienta de observabilidad externa (fuera de alcance para este proyecto).
-- **Variables de entorno**: `ANTHROPIC_API_KEY` en Vercel dashboard + `.env.local` en desarrollo +
-  `.env.example` versionado (nunca con valores reales).
-- **Seguridad**: validación de tipo MIME y tamaño de archivo antes de procesar; API key nunca
-  expuesta al cliente; sanitización de texto extraído antes de insertarlo en el DOM.
+- **Frontend**: Next.js App Router + TypeScript + Tailwind. Upload component with drag & drop, loading
+  states, results view, per-field error states.
+- **Backend**: Next.js API Routes (serverless functions on Vercel), not a separate service.
+- **Extraction**: pipeline in `/lib/extraction` — text parsing → prompt to Claude with fixed schema
+  → validation with Zod → per-field confidence normalization.
+- **Database**: none for the MVP. Fully stateless flow.
+- **Authentication**: none (out of scope for the challenge).
+- **Download**: `window.print()` with dedicated `@media print` stylesheet (PDF, native, no heavy
+  dependencies); client-side `html2canvas` for PNG (extra).
+- **Error handling**: try/catch at each pipeline step, with a specific `errorType` returned to the
+  frontend (see `conventions.md`).
+- **Logging**: `console.error` with step context; Vercel captures function logs automatically. No
+  external observability tool (out of scope for this project).
+- **Environment variables**: `ANTHROPIC_API_KEY` in Vercel dashboard + `.env.local` in development +
+  versioned `.env.example` (never with real values).
+- **Security**: MIME type and file size validation before processing; API key never exposed to the
+  client; sanitization of extracted text before inserting it into the DOM.
 
-## Por qué estas decisiones (para el README)
+## Why these decisions (for the README)
 
-- **Next.js full-stack en vez de frontend/backend separados**: un solo repo, un solo deploy, elimina
-  CORS y reduce el riesgo de "funciona en mi máquina pero no en producción".
-- **Extracción híbrida (parser + LLM) en vez de solo regex o solo LLM**: el parser da el texto de
-  forma barata y determinística; el LLM resuelve el problema real — estructurar texto libre y
-  variable en formatos de CV distintos — sin escribir cientos de reglas regex frágiles.
-- **Sin Puppeteer para la descarga**: es pesado y lento en funciones serverless gratuitas, y es la
-  pieza con mayor probabilidad de romperse en producción. `window.print()` + CSS es nativo y
-  confiable.
+- **Next.js full-stack instead of separate frontend/backend**: single repo, single deploy, eliminates
+  CORS and reduces the risk of "works on my machine but not in production".
+- **Hybrid extraction (parser + LLM) instead of regex-only or LLM-only**: the parser gives text
+  cheaply and deterministically; the LLM solves the real problem — structuring free-form, variable
+  text across different CV formats — without writing hundreds of fragile regex rules.
+- **No Puppeteer for download**: it is heavy and slow on free serverless functions, and is the piece
+  most likely to break in production. `window.print()` + CSS is native and reliable.

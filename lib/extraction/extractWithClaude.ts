@@ -9,8 +9,8 @@ export type ExtractWithClaudeResult =
 const MODEL = "claude-haiku-4-5-20251001";
 const MAX_TOKENS = 4096;
 
-// Guarda de costo: un CV normal está muy por debajo de esto. Truncar evita
-// gastar tokens de más con un PDF gigante que igual pasó la validación de 4 MB.
+// Cost guard: a normal CV is well below this. Truncating avoids spending extra
+// tokens on a huge PDF that still passed the 4 MB validation.
 const MAX_INPUT_CHARS = 60000;
 
 const CONFIDENCE_LEVELS = ["high", "low", "missing"] as const;
@@ -28,23 +28,23 @@ const CONFIDENCE_FIELD_PATHS = [
   "skills",
 ] as const;
 
-// NO usar { type: ["string", "null"] } aquí: Anthropic impone un límite duro
-// de 16 parámetros con tipos unión (anyOf/arrays de tipo) por request, porque
-// cada uno duplica el estado de la grammar de compilación (costo
-// exponencial). Con 19 campos de texto nullable en este schema, ese patrón
-// hace fallar la llamada con "too many parameters with union types". En vez
-// de eso, el modelo devuelve "" (string vacío) como centinela de "dato
-// ausente", y `normalizeEmptyStringsToNull` lo convierte a `null` antes de
-// validar con `cvDataSchema` — el contrato `CVData` no se entera del cambio.
+// Do NOT use { type: ["string", "null"] } here: Anthropic imposes a hard limit
+// of 16 parameters with union types (anyOf/type arrays) per request, because
+// each one duplicates the compilation grammar state (exponential cost). With
+// 19 nullable text fields in this schema, that pattern makes the call fail with
+// "too many parameters with union types". Instead, the model returns "" (empty
+// string) as a sentinel for "missing data", and `normalizeEmptyStringsToNull`
+// converts it to `null` before validating with `cvDataSchema` — the `CVData`
+// contract is unaware of the change.
 const nullableText = { type: "string" };
 
 /**
- * Schema JSON que se manda a la API para forzar la salida estructurada.
- * Se escribe a mano en vez de derivarlo de `cvDataSchema` porque structured
- * outputs exige `additionalProperties: false` en cada objeto: un record de
- * claves dinámicas se convertiría en un objeto cerrado sin properties y el
- * modelo no podría devolver ninguna clave de `confidence`. `cvDataSchema`
- * sigue siendo la única compuerta de validación de la respuesta.
+ * JSON schema sent to the API to force structured output. Written by hand
+ * instead of deriving from `cvDataSchema` because structured outputs require
+ * `additionalProperties: false` on each object: a record of dynamic keys would
+ * become a closed object with no properties and the model could not return any
+ * `confidence` key. `cvDataSchema` remains the sole validation gate for the
+ * response.
  */
 const CV_JSON_SCHEMA = {
   type: "object",
@@ -176,11 +176,11 @@ function normalizeFields(item: unknown, fields: readonly string[]): void {
 }
 
 /**
- * Convierte el centinela "" (usado en el prompt para evitar el límite de
- * Anthropic de 16 parámetros con tipos unión, ver `nullableText` en
- * `CV_JSON_SCHEMA`) a `null`, antes de validar con `cvDataSchema`. Solo toca
- * los campos de texto nullable conocidos; no afecta `skills`, `technologies`
- * ni `confidence`, que no son nullable.
+ * Converts the "" sentinel (used in the prompt to avoid Anthropic's limit of
+ * 16 union-type parameters, see `nullableText` in `CV_JSON_SCHEMA`) to `null`,
+ * before validating with `cvDataSchema`. Only touches known nullable text
+ * fields; does not affect `skills`, `technologies`, or `confidence`, which are
+ * not nullable.
  */
 function normalizeEmptyStringsToNull(json: unknown): unknown {
   if (typeof json !== "object" || json === null) return json;
@@ -202,17 +202,17 @@ function normalizeEmptyStringsToNull(json: unknown): unknown {
 }
 
 /**
- * Parsea el JSON de la respuesta y lo valida con `cvDataSchema`.
- * Devuelve las rutas de los campos que fallaron para poder loguear el motivo
- * sin exponer el contenido del CV ni la respuesta cruda del modelo.
+ * Parses the response JSON and validates it with `cvDataSchema`. Returns the
+ * paths of fields that failed so the reason can be logged without exposing CV
+ * content or the model's raw response.
  */
 function parseAndValidate(responseText: string): ValidationOutcome {
   let json: unknown;
   try {
     json = JSON.parse(responseText);
   } catch {
-    // El error de JSON.parse incluye un fragmento del texto recibido, que puede
-    // contener datos personales del CV: se loguea el paso, no el error (agents.md).
+    // JSON.parse errors include a fragment of the received text, which may
+    // contain personal CV data: log the step, not the error (agents.md).
     console.error(
       "[extractWithClaude] la respuesta del modelo no es JSON válido:",
       { responseChars: responseText.length }
@@ -232,14 +232,13 @@ function parseAndValidate(responseText: string): ValidationOutcome {
 }
 
 /**
- * Envía el texto plano del CV a la API de Claude (modelo Haiku, porque es una
- * tarea de extracción estructurada y no de razonamiento complejo) con salida
- * forzada en JSON, y valida la respuesta con `cvDataSchema` (ver schema.ts).
- * Si la validación falla, reintenta una vez con un prompt más estricto antes
- * de devolver un error controlado.
+ * Sends the CV plain text to the Claude API (Haiku model, because it is a
+ * structured extraction task, not complex reasoning) with forced JSON output,
+ * and validates the response with `cvDataSchema` (see schema.ts). If validation
+ * fails, retries once with a stricter prompt before returning a controlled error.
  *
- * Debe ejecutarse únicamente desde el servidor: nunca exponer
- * `ANTHROPIC_API_KEY` al cliente (ver agents.md).
+ * Must run only on the server: never expose `ANTHROPIC_API_KEY` to the client
+ * (see agents.md).
  */
 export async function extractWithClaude(
   rawText: string
@@ -252,7 +251,7 @@ export async function extractWithClaude(
     return {
       success: false,
       errorType: "missing_api_key",
-      message: "El servicio de extracción no está configurado correctamente.",
+      message: "The extraction service is not configured correctly.",
     };
   }
 
@@ -293,7 +292,7 @@ export async function extractWithClaude(
       return {
         success: false,
         errorType: "claude_api_error",
-        message: "No se pudo contactar el servicio de extracción. Intenta de nuevo.",
+        message: "Could not reach the extraction service. Try again.",
       };
     }
 
@@ -313,6 +312,6 @@ export async function extractWithClaude(
     success: false,
     errorType: "invalid_claude_response",
     message:
-      "No se pudo estructurar la información del CV. Intenta con otro archivo.",
+      "Could not structure the CV information. Try with another file.",
   };
 }

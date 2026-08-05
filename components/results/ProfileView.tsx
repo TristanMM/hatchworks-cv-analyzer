@@ -18,8 +18,8 @@ type ContactItem = {
 };
 
 /**
- * Vista de resultados rediseñada (dashboard/portafolio), ver context.md.
- * Header ejecutivo: nombre, contacto e introducción breve.
+ * Redesigned results view (dashboard/portfolio), see context.md.
+ * Executive header: name, contact, and brief introduction.
  */
 export function ProfileView({ data }: ProfileViewProps) {
   if (!data) return null;
@@ -127,7 +127,7 @@ function TaglineBlock({ text }: { text: string }) {
           aria-expanded={isExpanded}
           className="mt-1 self-start text-xs font-medium text-primary transition-colors hover:text-primary-hover print:hidden"
         >
-          {isExpanded ? "Ver menos" : "Ver más"}
+          {isExpanded ? "Show less" : "Show more"}
         </button>
       )}
     </>
@@ -170,7 +170,7 @@ function buildContactItems(
     items.push({
       key: "phone",
       label: phone,
-      fieldLabel: "Teléfono",
+      fieldLabel: "Phone",
       href: `tel:${phone}`,
       confidenceLevel: confidence["contact.phone"],
     });
@@ -179,7 +179,7 @@ function buildContactItems(
     items.push({
       key: "location",
       label: contact.location.trim(),
-      fieldLabel: "Ubicación",
+      fieldLabel: "Location",
       confidenceLevel: confidence["contact.location"],
     });
   }
@@ -237,7 +237,7 @@ function getMostRecentExperienceLabel(
   if (!entry) return null;
 
   const { role, company } = entry;
-  if (role && company) return `${role} en ${company}`;
+  if (role && company) return `${role} at ${company}`;
   return role ?? company;
 }
 

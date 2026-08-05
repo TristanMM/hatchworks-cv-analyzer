@@ -32,11 +32,11 @@ function hasArrayChanged<T>(original: T[], edited: T[]): boolean {
 }
 
 /**
- * Compara los valores originales y editados y promueve a "high" los campos
- * (o secciones completas, para experience/education/projects) que tenían
- * confidence "low"/"missing" y fueron modificados por el usuario. Los campos
- * sin cambios conservan su nivel original; nunca se degrada un valor "high"
- * (ver plan "Editar información del CV").
+ * Compares original and edited values and promotes to "high" the fields
+ * (or full sections, for experience/education/projects) that had confidence
+ * "low"/"missing" and were modified by the user. Unchanged fields keep their
+ * original level; a "high" value is never degraded (see plan "Edit CV
+ * information").
  */
 export function promoteConfidence(original: CVData, edited: CVData): CVData["confidence"] {
   const confidence = { ...edited.confidence };
@@ -89,11 +89,10 @@ const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[80px] resize-y`;
 const LABEL_CLASS = "flex flex-col gap-1 text-xs font-medium text-muted-foreground";
 
 /**
- * Modal de edición en memoria de los campos principales de CVData (ver plan
- * "Editar información del CV"). No persiste nada en backend: al guardar,
- * `onSave` devuelve el CVData editado (con confidence promovida en los
- * campos/secciones modificados que eran "low"/"missing") para que el llamador
- * actualice su estado local.
+ * In-memory edit modal for the main CVData fields (see plan "Edit CV
+ * information"). Does not persist anything to the backend: on save, `onSave`
+ * returns the edited CVData (with confidence promoted on modified fields/sections
+ * that were "low"/"missing") so the caller can update its local state.
  */
 export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
   const [editedData, setEditedData] = useState<CVData>(() => structuredClone(data));
@@ -196,12 +195,12 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
       >
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 id="edit-cv-modal-title" className="text-lg font-semibold text-foreground">
-            Editar información
+            Edit information
           </h2>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label="Close"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             <XIcon className="h-5 w-5" />
@@ -211,10 +210,10 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-col gap-6">
             <section className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-foreground">Información básica</h3>
+              <h3 className="text-sm font-semibold text-foreground">Basic information</h3>
               <FieldGroup
-                label="Nombre"
-                fieldLabel="Nombre"
+                label="Name"
+                fieldLabel="Name"
                 confidenceLevel={editedData.confidence["name"]}
               >
                 <input
@@ -225,8 +224,8 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                 />
               </FieldGroup>
               <FieldGroup
-                label="Resumen"
-                fieldLabel="Resumen"
+                label="Summary"
+                fieldLabel="Summary"
                 confidenceLevel={editedData.confidence["summary"]}
               >
                 <textarea
@@ -238,7 +237,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
             </section>
 
             <section className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-foreground">Contacto</h3>
+              <h3 className="text-sm font-semibold text-foreground">Contact</h3>
               <FieldGroup
                 label="Email"
                 fieldLabel="Email"
@@ -252,8 +251,8 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                 />
               </FieldGroup>
               <FieldGroup
-                label="Teléfono"
-                fieldLabel="Teléfono"
+                label="Phone"
+                fieldLabel="Phone"
                 confidenceLevel={editedData.confidence["contact.phone"]}
               >
                 <input
@@ -264,8 +263,8 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                 />
               </FieldGroup>
               <FieldGroup
-                label="Ubicación"
-                fieldLabel="Ubicación"
+                label="Location"
+                fieldLabel="Location"
                 confidenceLevel={editedData.confidence["contact.location"]}
               >
                 <input
@@ -291,17 +290,17 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
 
             {editedData.experience.length > 0 && (
               <section className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-foreground">Experiencia</h3>
+                <h3 className="text-sm font-semibold text-foreground">Experience</h3>
                 {editedData.experience.map((item, index) => (
                   <EntryCard
                     key={`experience-${index}`}
-                    label="Experiencia"
+                    label="Experience"
                     index={index}
                     confidenceLevel={editedData.confidence["experience"]}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <label className={LABEL_CLASS}>
-                        Empresa
+                        Company
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -312,7 +311,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Puesto
+                        Role
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -323,7 +322,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de inicio
+                        Start date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -334,7 +333,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de fin
+                        End date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -346,7 +345,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                       </label>
                     </div>
                     <label className={LABEL_CLASS}>
-                      Descripción
+                      Description
                       <textarea
                         className={TEXTAREA_CLASS}
                         value={item.description ?? ""}
@@ -362,17 +361,17 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
 
             {editedData.education.length > 0 && (
               <section className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-foreground">Educación</h3>
+                <h3 className="text-sm font-semibold text-foreground">Education</h3>
                 {editedData.education.map((item, index) => (
                   <EntryCard
                     key={`education-${index}`}
-                    label="Educación"
+                    label="Education"
                     index={index}
                     confidenceLevel={editedData.confidence["education"]}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <label className={LABEL_CLASS}>
-                        Institución
+                        Institution
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -383,7 +382,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Título
+                        Degree
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -394,7 +393,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Campo de estudio
+                        Field of study
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -405,7 +404,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de inicio
+                        Start date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -416,7 +415,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de fin
+                        End date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -434,17 +433,17 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
 
             {editedData.projects.length > 0 && (
               <section className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-foreground">Proyectos</h3>
+                <h3 className="text-sm font-semibold text-foreground">Projects</h3>
                 {editedData.projects.map((item, index) => (
                   <EntryCard
                     key={`project-${index}`}
-                    label="Proyecto"
+                    label="Project"
                     index={index}
                     confidenceLevel={editedData.confidence["projects"]}
                   >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <label className={`${LABEL_CLASS} sm:col-span-2`}>
-                        Título
+                        Title
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -455,7 +454,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de inicio
+                        Start date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -466,7 +465,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                         />
                       </label>
                       <label className={LABEL_CLASS}>
-                        Fecha de fin
+                        End date
                         <input
                           type="text"
                           className={INPUT_CLASS}
@@ -478,7 +477,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                       </label>
                     </div>
                     <label className={LABEL_CLASS}>
-                      Descripción
+                      Description
                       <textarea
                         className={TEXTAREA_CLASS}
                         value={item.description ?? ""}
@@ -488,7 +487,7 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
                       />
                     </label>
                     <label className={LABEL_CLASS}>
-                      Tecnologías (separadas por coma)
+                      Technologies (comma-separated)
                       <input
                         type="text"
                         className={INPUT_CLASS}
@@ -504,10 +503,10 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
             )}
 
             <section className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-foreground">Habilidades</h3>
+              <h3 className="text-sm font-semibold text-foreground">Skills</h3>
               <FieldGroup
-                label="Habilidades (separadas por coma)"
-                fieldLabel="Habilidades"
+                label="Skills (comma-separated)"
+                fieldLabel="Skills"
                 confidenceLevel={editedData.confidence["skills"]}
               >
                 <input
@@ -523,14 +522,14 @@ export function EditCVModal({ data, onSave, onClose }: EditCVModalProps) {
 
         <div className="flex justify-end gap-2 border-t border-border px-6 py-4">
           <Button type="button" variant="secondary" onClick={onClose}>
-            Cancelar
+            Cancel
           </Button>
           <Button
             type="button"
             onClick={handleSave}
             className="bg-primary text-primary-foreground hover:bg-primary-hover"
           >
-            Guardar cambios
+            Save changes
           </Button>
         </div>
       </div>

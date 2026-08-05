@@ -85,7 +85,7 @@ describe("buildTagline", () => {
       ],
     });
 
-    expect(buildTagline(data)).toBe("TypeScript · React · Senior Dev en Acme Corp");
+    expect(buildTagline(data)).toBe("TypeScript · React · Senior Dev at Acme Corp");
   });
 
   it("devuelve solo skills cuando no hay experiencia ni proyectos recientes", () => {
@@ -121,6 +121,6 @@ describe("buildTagline", () => {
       ],
     });
 
-    expect(buildTagline(data)).toBe("TypeScript · Lead en Current Co");
+    expect(buildTagline(data)).toBe("TypeScript · Lead at Current Co");
   });
 });

@@ -1,7 +1,7 @@
-// Debe importarse antes de "pdf-parse": registra el worker real de pdf.js en
-// globalThis para que el fallback interno de pdf.js no intente resolver
-// "./pdf.worker.mjs" con una ruta relativa rota tras el bundling de Next.js
-// (ver troubleshooting.md de pdf-parse, secciones 3 y 4).
+// Must be imported before "pdf-parse": registers the real pdf.js worker on
+// globalThis so pdf.js's internal fallback does not try to resolve
+// "./pdf.worker.mjs" with a broken relative path after Next.js bundling
+// (see pdf-parse troubleshooting.md, sections 3 and 4).
 import "pdf-parse/worker";
 import { PDFParse } from "pdf-parse";
 
@@ -9,15 +9,15 @@ export type ParsePdfResult =
   | { success: true; text: string }
   | { success: false; errorType: string; message: string };
 
-// Heurística: un CV real tiene mucho más texto que esto. Un valor por debajo
-// del umbral sugiere un PDF escaneado sin capa de texto (ver testing.md, caso 5).
+// Heuristic: a real CV has much more text than this. A value below the
+// threshold suggests a scanned PDF with no text layer (see testing.md, case 5).
 const MIN_EXTRACTABLE_TEXT_LENGTH = 40;
 
 /**
- * Extrae el texto crudo de un PDF usando `pdf-parse` (API v2, basada en la
- * clase `PDFParse`). Si el texto extraído está vacío o es sospechosamente
- * corto, devuelve un error explícito "no_extractable_text" en vez de un
- * string vacío silencioso (ver testing.md, caso límite 5: PDF escaneado).
+ * Extracts raw text from a PDF using `pdf-parse` (v2 API, based on the
+ * `PDFParse` class). If the extracted text is empty or suspiciously short,
+ * returns an explicit "no_extractable_text" error instead of a silent empty
+ * string (see testing.md, edge case 5: scanned PDF).
  */
 export async function parsePdf(file: Buffer): Promise<ParsePdfResult> {
   let parser: PDFParse | undefined;
@@ -31,7 +31,7 @@ export async function parsePdf(file: Buffer): Promise<ParsePdfResult> {
         success: false,
         errorType: "no_extractable_text",
         message:
-          "No se pudo extraer texto legible del PDF. Es posible que sea un documento escaneado sin capa de texto.",
+          "Could not extract readable text from the PDF. It may be a scanned document without a text layer.",
       };
     }
 
@@ -41,7 +41,7 @@ export async function parsePdf(file: Buffer): Promise<ParsePdfResult> {
     return {
       success: false,
       errorType: "pdf_parse_error",
-      message: "No se pudo procesar el archivo PDF.",
+      message: "Could not process the PDF file.",
     };
   } finally {
     await parser?.destroy();

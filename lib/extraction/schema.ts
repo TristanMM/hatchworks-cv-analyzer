@@ -2,14 +2,14 @@ import { z } from "zod";
 import type { CVData } from "@/types/cv";
 
 /**
- * Schema de Zod que valida `CVData` (ver types/cv.ts y context.md). Es el
- * schema real usado por `extractWithClaude.ts` para validar la respuesta de
- * la API de Claude antes de devolverla al frontend. La anotación
- * `z.ZodType<CVData>` obliga a TypeScript a fallar en tiempo de compilación
- * si este schema deja de coincidir con la fuente de verdad del tipo.
+ * Zod schema that validates `CVData` (see types/cv.ts and context.md). It is
+ * the actual schema used by `extractWithClaude.ts` to validate the Claude API
+ * response before returning it to the frontend. The `z.ZodType<CVData>`
+ * annotation forces TypeScript to fail at compile time if this schema stops
+ * matching the type's source of truth.
  *
- * La lógica de normalización de confianza (qué campos se marcan como
- * "low"/"missing" y por qué) vive en `extractWithClaude.ts`, no aquí.
+ * Confidence normalization logic (which fields are marked as "low"/"missing"
+ * and why) lives in `extractWithClaude.ts`, not here.
  */
 export const cvDataSchema: z.ZodType<CVData> = z.object({
   name: z.string().nullable(),

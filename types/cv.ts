@@ -1,11 +1,11 @@
 /**
- * Tipo CVData — fuente de verdad definida en context.md.
- * Cualquier cambio a este schema es una decisión de arquitectura y debe
- * confirmarse antes de implementarse (ver agents.md).
+ * CVData type — source of truth defined in context.md.
+ * Any change to this schema is an architecture decision and must be confirmed
+ * before implementation (see agents.md).
  */
 export type CVData = {
   name: string | null;
-  summary: string | null; // parrafo de perfil/resumen profesional, tal como aparece en el CV
+  summary: string | null; // profile/professional summary paragraph, as it appears in the CV
   contact: {
     email: string | null;
     phone: string | null;
@@ -15,8 +15,8 @@ export type CVData = {
   experience: Array<{
     company: string | null;
     role: string | null;
-    startDate: string | null; // formato libre tal como aparece en el CV, ej. "Ene 2022"
-    endDate: string | null; // null o "Presente" si es el trabajo actual
+    startDate: string | null; // free-form as it appears in the CV, e.g. "Ene 2022"
+    endDate: string | null; // null or "Presente" if it is the current job
     description: string | null;
   }>;
   education: Array<{
@@ -34,14 +34,14 @@ export type CVData = {
     technologies: string[];
   }>;
   skills: string[];
-  // Metadatos de confianza — ver context.md, sección "Qué significa 'campo no confiable'"
+  // Confidence metadata — see context.md, section "What 'unreliable field' means"
   confidence: {
     [fieldPath: string]: "high" | "low" | "missing";
   };
 };
 
 /**
- * Forma estándar de respuesta de las API routes (ver conventions.md).
+ * Standard API route response shape (see conventions.md).
  */
 export type ApiResult<T> =
   | { success: true; data: T }

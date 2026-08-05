@@ -6,9 +6,9 @@ export type ConfidenceBadgeProps = {
 };
 
 /**
- * Indicador visual sutil de confianza por campo extraído (ver context.md,
- * "campo no confiable"). "high" no muestra nada; "low"/"missing" muestran un
- * punto de color pequeño con tooltip nativo explicando el estado.
+ * Subtle visual confidence indicator per extracted field (see context.md,
+ * "unreliable field"). "high" shows nothing; "low"/"missing" show a small
+ * colored dot with a native tooltip explaining the state.
  */
 export function ConfidenceBadge({ level, fieldLabel }: ConfidenceBadgeProps) {
   if (!level || level === "high") return null;
@@ -16,8 +16,8 @@ export function ConfidenceBadge({ level, fieldLabel }: ConfidenceBadgeProps) {
   const isLow = level === "low";
   const dotColorClass = isLow ? "bg-warning" : "bg-neutral-confidence";
   const message = isLow
-    ? "dato con confianza baja"
-    : "no se pudo extraer este dato con confianza";
+    ? "low-confidence data"
+    : "could not extract this data with confidence";
   const tooltip = fieldLabel ? `${fieldLabel}: ${message}` : capitalize(message);
 
   return (

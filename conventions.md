@@ -1,15 +1,15 @@
-# conventions.md — Estándares de código
+# conventions.md — Code standards
 
-## Estructura de carpetas (Next.js App Router)
+## Folder structure (Next.js App Router)
 
 ```
 /app
   /api
     /extract
-      route.ts          # API route: recibe el archivo, orquesta el pipeline de extracción
-  /page.tsx              # Página principal: upload
+      route.ts          # API route: receives the file, orchestrates the extraction pipeline
+  /page.tsx              # Main page: upload
   /results
-    /page.tsx             # Vista de resultados (o manejado con estado si es una sola página)
+    /page.tsx             # Results view (or handled with state if it is a single page)
   /layout.tsx
 /components
   /upload
@@ -18,17 +18,17 @@
     ProfileView.tsx
     ExperienceTimeline.tsx
     ConfidenceBadge.tsx
-  /ui                     # componentes genéricos reutilizables (botón, spinner, etc.)
+  /ui                     # generic reusable components (button, spinner, etc.)
 /lib
   /extraction
-    parsePdf.ts           # extraer texto crudo del PDF
-    parseDocx.ts           # extra: extraer texto crudo del DOCX
-    extractWithClaude.ts   # llamada a la API de Claude + parseo de la respuesta
-    schema.ts              # schema de Zod que valida CVData
+    parsePdf.ts           # extract raw text from PDF
+    parseDocx.ts           # extra: extract raw text from DOCX
+    extractWithClaude.ts   # Claude API call + response parsing
+    schema.ts              # Zod schema that validates CVData
   /utils
     fileValidation.ts
 /types
-  cv.ts                    # tipo CVData compartido (debe coincidir con context.md)
+  cv.ts                    # shared CVData type (must match context.md)
 .env.example
 agents.md
 context.md
@@ -37,51 +37,51 @@ testing.md
 architecture.md
 ```
 
-## Nomenclatura
+## Naming
 
-- Componentes de React: `PascalCase.tsx` (ej. `FileUploader.tsx`).
-- Funciones y variables: `camelCase`.
-- Rutas de páginas y archivos que no son componentes: `kebab-case` cuando aplique.
-- Tipos e interfaces: `PascalCase`, sin prefijo `I` (ej. `CVData`, no `ICVData`).
+- React components: `PascalCase.tsx` (e.g. `FileUploader.tsx`).
+- Functions and variables: `camelCase`.
+- Page routes and files that are not components: `kebab-case` when applicable.
+- Types and interfaces: `PascalCase`, no `I` prefix (e.g. `CVData`, not `ICVData`).
 
-## Manejo de errores
+## Error handling
 
-Patrón estándar para cualquier función que pueda fallar (parsing, llamada a la API, validación):
+Standard pattern for any function that may fail (parsing, API call, validation):
 
 ```typescript
 try {
-  // lógica
+  // logic
 } catch (error) {
-  console.error("[extractWithClaude] fallo en paso X:", error);
+  console.error("[extractWithClaude] failed at step X:", error);
   return { success: false, errorType: "claude_api_error", message: "..." };
 }
 ```
 
-- Nunca lanzar un error genérico sin contexto de en qué paso del pipeline ocurrió.
-- Las API routes siempre devuelven un objeto con forma consistente:
+- Never throw a generic error without context about which pipeline step failed.
+- API routes always return an object with a consistent shape:
   `{ success: boolean, data?: CVData, error?: { type: string, message: string } }`.
-- El frontend siempre debe tener un estado visual para cada `errorType` posible, nunca un catch-all
-  que muestre una pantalla en blanco.
+- The frontend must always have a visual state for each possible `errorType`, never a catch-all that
+  shows a blank screen.
 
-## Componentes
+## Components
 
-- Un componente por archivo.
-- Props tipadas explícitamente con una `type` o `interface` en el mismo archivo o en `/types` si se
-  reutiliza en varios lugares.
-- Componentes de presentación (solo UI) separados de componentes con lógica de datos cuando el
-  componente crece.
+- One component per file.
+- Props explicitly typed with a `type` or `interface` in the same file or in `/types` if reused in
+  multiple places.
+- Presentation components (UI only) separated from components with data logic when the component
+  grows.
 
 ## Commits (Conventional Commits)
 
-Usar siempre este formato, porque el criterio de "calidad de código" del reto evalúa explícitamente
-el uso del historial de git:
+Always use this format, because the challenge's "code quality" criterion explicitly evaluates git
+history usage:
 
 ```
-feat: agregar componente de timeline de experiencia
-fix: corregir validación de tamaño máximo de archivo
-docs: actualizar README con instrucciones de setup
-refactor: extraer lógica de parsing a función separada
-test: agregar casos límite para CV sin sección de educación
+feat: add experience timeline component
+fix: correct maximum file size validation
+docs: update README with setup instructions
+refactor: extract parsing logic to separate function
+test: add edge cases for CV without education section
 ```
 
-Commits pequeños y frecuentes (por tarea completada), no un commit gigante al final del día.
+Small, frequent commits (per completed task), not one giant commit at the end of the day.

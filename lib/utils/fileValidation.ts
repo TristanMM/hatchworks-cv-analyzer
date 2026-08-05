@@ -7,12 +7,12 @@ const ACCEPTED_DOCX_EXTENSION = ".docx";
 const ACCEPTED_PDF_MIME_TYPE = "application/pdf";
 const ACCEPTED_DOCX_MIME_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/zip", // DOCX es contenedor ZIP; algunos navegadores reportan este MIME
+  "application/zip", // DOCX is a ZIP container; some browsers report this MIME
 ] as const;
 
-// Vercel Functions rechaza cualquier body de request por encima de 4.5 MB a
-// nivel de plataforma (antes de que corra nuestro código), devolviendo un 413
-// que no es JSON — por eso el margen de seguridad por debajo de ese límite.
+// Vercel Functions rejects any request body above 4.5 MB at the platform
+// level (before our code runs), returning a non-JSON 413 — hence the safety
+// margin below that limit.
 export const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024; // 4 MB
 const PDF_MAGIC_BYTES = Buffer.from("%PDF");
 const ZIP_MAGIC_BYTES = Buffer.from([0x50, 0x4b, 0x03, 0x04]); // "PK\x03\x04"
@@ -47,8 +47,8 @@ function hasZipSignature(buffer: Buffer): boolean {
 export type DetectedFileFormat = "pdf" | "docx";
 
 /**
- * Detecta el formato del archivo tras pasar `validateFileBuffer`. Prioriza
- * magic bytes (%PDF vs PK\x03\x04); la extensión del nombre es solo respaldo.
+ * Detects the file format after passing `validateFileBuffer`. Prioritizes
+ * magic bytes (%PDF vs PK\x03\x04); the name extension is fallback only.
  */
 export function detectFileFormat(buffer: Buffer, fileName: string): DetectedFileFormat {
   if (hasPdfSignature(buffer)) return "pdf";
@@ -60,11 +60,11 @@ export function detectFileFormat(buffer: Buffer, fileName: string): DetectedFile
 }
 
 /**
- * Valida tipo MIME, extensión y tamaño del archivo en el cliente (chequeo
- * básico, para feedback inmediato en el uploader, y para no subir archivos
- * que Vercel rechazaría de todos modos con un 413 antes de llegar a nuestro
- * código). La validación de contenido real (magic bytes) se hace server-side
- * con `validateFileBuffer` (ver agents.md y testing.md).
+ * Validates MIME type, extension, and file size on the client (basic check,
+ * for immediate feedback in the uploader, and to avoid uploading files that
+ * Vercel would reject with a 413 anyway before reaching our code). Real
+ * content validation (magic bytes) is done server-side with `validateFileBuffer`
+ * (see agents.md and testing.md).
  */
 export function validateFile(file: File): FileValidationResult {
   try {
@@ -72,7 +72,7 @@ export function validateFile(file: File): FileValidationResult {
       return {
         success: false,
         errorType: "invalid_file_type",
-        message: "Solo se aceptan archivos PDF (.pdf) o DOCX (.docx).",
+        message: "Only PDF (.pdf) or DOCX (.docx) files are accepted.",
       };
     }
 
@@ -80,7 +80,7 @@ export function validateFile(file: File): FileValidationResult {
       return {
         success: false,
         errorType: "file_too_large",
-        message: "El archivo supera el tamaño máximo permitido de 4 MB.",
+        message: "The file exceeds the maximum allowed size of 4 MB.",
       };
     }
 
@@ -90,17 +90,17 @@ export function validateFile(file: File): FileValidationResult {
     return {
       success: false,
       errorType: "validation_error",
-      message: "No se pudo validar el archivo.",
+      message: "Could not validate the file.",
     };
   }
 }
 
 /**
- * Valida el contenido real del archivo en el servidor: tamaño máximo y firma
- * de PDF (magic `%PDF`) o DOCX (firma ZIP local file header), antes de
- * pasarlo al parser o gastar tokens en la API de Claude (ver agents.md y
- * testing.md). Complementa a `validateFile`, que solo hace un chequeo básico
- * de extensión/MIME en el cliente.
+ * Validates the real file content on the server: maximum size and PDF signature
+ * (magic `%PDF`) or DOCX (ZIP local file header signature), before passing it
+ * to the parser or spending tokens on the Claude API (see agents.md and
+ * testing.md). Complements `validateFile`, which only does a basic
+ * extension/MIME check on the client.
  */
 export function validateFileBuffer(buffer: Buffer): FileValidationResult {
   try {
@@ -108,7 +108,7 @@ export function validateFileBuffer(buffer: Buffer): FileValidationResult {
       return {
         success: false,
         errorType: "file_too_large",
-        message: "El archivo supera el tamaño máximo permitido de 4 MB.",
+        message: "The file exceeds the maximum allowed size of 4 MB.",
       };
     }
 
@@ -120,14 +120,14 @@ export function validateFileBuffer(buffer: Buffer): FileValidationResult {
       success: false,
       errorType: "invalid_file_signature",
       message:
-        "El archivo no es un PDF ni un DOCX válido (el contenido no corresponde a un PDF o a un contenedor ZIP/DOCX).",
+        "The file is not a valid PDF or DOCX (the content does not match a PDF or ZIP/DOCX container).",
     };
   } catch (error) {
     console.error("[validateFileBuffer] fallo en validación server-side del archivo:", error);
     return {
       success: false,
       errorType: "validation_error",
-      message: "No se pudo validar el archivo.",
+      message: "Could not validate the file.",
     };
   }
 }

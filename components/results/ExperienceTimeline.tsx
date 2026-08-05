@@ -20,7 +20,7 @@ type TimelineEntry = {
 };
 
 /**
- * Timeline visual unificada de experiencia laboral y educación (ver context.md).
+ * Unified visual timeline of work experience and education (see context.md).
  */
 export function ExperienceTimeline({
   experience = [],
@@ -35,7 +35,7 @@ export function ExperienceTimeline({
     <section className="w-full rounded-lg border border-border bg-surface p-6 shadow-card sm:p-8">
       <h2 className="mb-6 flex items-center gap-2 text-lg font-semibold text-foreground">
         <ClockIcon className="h-5 w-5 text-primary" />
-        Trayectoria
+        Timeline
       </h2>
       <ol className="relative ml-2 space-y-8 border-l border-border">
         {entries.map((entry) => (
@@ -200,7 +200,7 @@ export function extractLatestYear(...dates: (string | null)[]): number | null {
 }
 
 function getEntryLabel(kind: TimelineEntry["kind"]): string {
-  return kind === "experience" ? "Experiencia" : "Educación";
+  return kind === "experience" ? "Experience" : "Education";
 }
 
 function ClockIcon({ className }: { className?: string }) {

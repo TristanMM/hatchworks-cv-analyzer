@@ -1,42 +1,42 @@
-# testing.md — Requisitos y estándares de testing
+# testing.md — Testing requirements and standards
 
-## Herramientas
+## Tools
 
-- **Vitest** para pruebas unitarias de funciones puras (parsing, validación, transformación de
-  datos).
-- **Playwright** para pruebas end-to-end del flujo principal (subida, extracción, descarga y
-  edición). Ver `e2e/cv-analyzer.spec.ts`.
+- **Vitest** for unit tests of pure functions (parsing, validation, data transformation).
+- **Playwright** for end-to-end tests of the main flow (upload, extraction, download, and editing).
+  See `e2e/cv-analyzer.spec.ts`.
 
-## Casos límite obligatorios (definir "hecho" para el pipeline de extracción)
+## Mandatory edge cases (define "done" for the extraction pipeline)
 
-La lógica de extracción no se considera terminada hasta que maneje correctamente, sin romper la UI:
+Extraction logic is not considered finished until it handles the following correctly, without
+breaking the UI:
 
-1. CV en PDF de una sola página, formato simple (caso feliz).
-2. CV en PDF de múltiples páginas (3+).
-3. CV con diseño de dos columnas.
-4. CV sin una o más secciones (ej. sin sección de educación).
-5. CV escaneado como imagen, sin capa de texto extraíble (debe mostrar error claro, no colapsar).
-6. Archivo que no es un CV o no es un PDF válido (debe rechazarse con mensaje claro antes de llegar
-   a la API de Claude, para no gastar tokens innecesariamente).
-7. CV en español y CV en inglés (si se implementa el extra de bilingüe).
-8. Respuesta de la API de Claude que no cumple el schema esperado (debe manejarse con Zod, sin
-   romper el render).
+1. Single-page PDF CV, simple format (happy path).
+2. Multi-page PDF CV (3+).
+3. CV with a two-column layout.
+4. CV missing one or more sections (e.g. no education section).
+5. CV scanned as an image, with no extractable text layer (must show a clear error, not crash).
+6. File that is not a CV or not a valid PDF (must be rejected with a clear message before reaching
+   the Claude API, to avoid wasting tokens unnecessarily).
+7. CV in Spanish and CV in English (if the bilingual extra is implemented).
+8. Claude API response that does not match the expected schema (must be handled with Zod, without
+   breaking render).
 
-## Pruebas negativas obligatorias
+## Mandatory negative tests
 
-- Subir un archivo de más de 4 MB (límite alineado con el máximo de payload de Vercel Functions,
-  4.5 MB) → debe rechazarse antes de procesar.
-- Subir un archivo con extensión `.pdf` falsa (contenido que no es realmente un PDF) → debe
-  rechazarse por validación de contenido, no solo por extensión.
-- Simular fallo de la API de Claude (timeout o error 5xx) → la UI debe mostrar un estado de error
-  específico, no una pantalla en blanco ni un mensaje genérico de "algo salió mal".
+- Upload a file larger than 4 MB (limit aligned with Vercel Functions maximum payload, 4.5 MB) → must
+  be rejected before processing.
+- Upload a file with a fake `.pdf` extension (content that is not really a PDF) → must be rejected by
+  content validation, not extension alone.
+- Simulate Claude API failure (timeout or 5xx error) → the UI must show a specific error state, not a
+  blank screen or a generic "something went wrong" message.
 
-## Cobertura mínima recomendada
+## Recommended minimum coverage
 
-No se busca 100% de cobertura (no es el foco del reto). Priorizar:
+100% coverage is not the goal (not the focus of the challenge). Prioritize:
 
-- 100% de los casos límite de la lista de arriba cubiertos con al menos una prueba.
-- Cobertura razonable (no numérica estricta) de `/lib/extraction/*`, que es el corazón del 25% de
-  "enfoque de extracción de datos" en la evaluación.
-- No es necesario cubrir componentes puramente visuales con pruebas unitarias; para esos, las pruebas
-  end-to-end con Playwright son suficientes.
+- 100% of the edge cases in the list above covered with at least one test.
+- Reasonable (not strictly numeric) coverage of `/lib/extraction/*`, which is the core of the 25%
+  "data extraction approach" in the evaluation.
+- Purely visual components do not need unit test coverage; for those, Playwright end-to-end tests are
+  sufficient.

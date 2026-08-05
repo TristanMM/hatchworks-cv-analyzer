@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // pdf-parse/pdfjs-dist depende de resolver rutas de worker relativas a su
-  // propia ubicación en node_modules; si Next.js los empaqueta para el
-  // servidor, esas rutas se rompen (ver lib/extraction/parsePdf.ts).
+  // pdf-parse/pdfjs-dist relies on resolving worker paths relative to its own
+  // location in node_modules; if Next.js bundles them for the server, those
+  // paths break (see lib/extraction/parsePdf.ts).
   serverExternalPackages: ["pdf-parse", "@napi-rs/canvas"],
 };
 

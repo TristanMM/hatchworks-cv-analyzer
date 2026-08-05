@@ -42,7 +42,7 @@ export default function HomePage() {
         error: {
           type: "network_error",
           message:
-            "No se pudo conectar con el servidor. Revisa tu conexión e intenta de nuevo.",
+            "Could not connect to the server. Check your connection and try again.",
         },
       });
     } finally {
@@ -91,7 +91,7 @@ export default function HomePage() {
       link.click();
     } catch (error) {
       console.error("[HomePage] fallo al generar la imagen del perfil:", error);
-      setDownloadImageError("No se pudo generar la imagen. Intenta de nuevo.");
+      setDownloadImageError("Could not generate the image. Try again.");
     } finally {
       setIsDownloadingImage(false);
     }
@@ -100,9 +100,9 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 p-8 print:min-h-0 print:justify-start print:gap-4 print:p-0">
       <div className="flex flex-col items-center gap-2 text-center print:hidden">
-        <h1 className="text-3xl font-bold">Analizador de CV</h1>
+        <h1 className="text-3xl font-bold">CV Analyzer</h1>
         <p className="text-sm text-gray-500">
-          Sube tu CV y obtén un perfil rediseñado
+          Upload your CV and get a redesigned profile
         </p>
       </div>
 
@@ -110,7 +110,7 @@ export default function HomePage() {
         <FileUploader onFileSelected={handleFileSelected} />
       </div>
 
-      {isLoading && <p className="text-sm text-gray-500">Procesando...</p>}
+      {isLoading && <p className="text-sm text-gray-500">Processing...</p>}
 
       {!isLoading && result && !result.success && (
         <p className="text-sm font-medium text-red-600">{result.error.message}</p>
@@ -125,7 +125,7 @@ export default function HomePage() {
                 onClick={() => window.print()}
                 className="bg-primary text-primary-foreground hover:bg-primary-hover print:hidden"
               >
-                Descargar como PDF
+                Download as PDF
               </Button>
               <Button
                 type="button"
@@ -133,14 +133,14 @@ export default function HomePage() {
                 disabled={isDownloadingImage}
                 className="bg-primary text-primary-foreground hover:bg-primary-hover print:hidden disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isDownloadingImage ? "Generando imagen..." : "Descargar como imagen"}
+                {isDownloadingImage ? "Generating image..." : "Download as image"}
               </Button>
               <Button
                 type="button"
                 onClick={() => setIsEditModalOpen(true)}
                 className="bg-primary text-primary-foreground hover:bg-primary-hover print:hidden"
               >
-                Editar información
+                Edit information
               </Button>
             </div>
             {downloadImageError && (
@@ -180,11 +180,11 @@ export default function HomePage() {
 }
 
 /**
- * Interpreta la respuesta de /api/extract. Vercel puede rechazar el request
- * a nivel de plataforma (ej. 413 por payload > 4.5 MB) antes de que nuestra
- * API route llegue a ejecutarse, devolviendo un body que no es JSON — en ese
- * caso `response.json()` lanza y hay que mapear el error por status HTTP en
- * vez de dejar que ese fallo caiga en el network_error genérico.
+ * Interprets the /api/extract response. Vercel may reject the request at the
+ * platform level (e.g. 413 for payload > 4.5 MB) before our API route runs,
+ * returning a body that is not JSON — in that case `response.json()` throws and
+ * the error must be mapped by HTTP status instead of letting that failure fall
+ * into the generic network_error.
  */
 async function parseExtractResponse(
   response: Response
@@ -202,7 +202,7 @@ async function parseExtractResponse(
         success: false,
         error: {
           type: "file_too_large",
-          message: "El archivo supera el tamaño máximo permitido de 4 MB.",
+          message: "The file exceeds the maximum allowed size of 4 MB.",
         },
       };
     }
@@ -211,7 +211,7 @@ async function parseExtractResponse(
       success: false,
       error: {
         type: "server_error",
-        message: `El servidor respondió con un error inesperado (${response.status}). Intenta de nuevo.`,
+        message: `The server responded with an unexpected error (${response.status}). Try again.`,
       },
     };
   }
@@ -225,5 +225,5 @@ function buildImageFilename(name: string | null | undefined): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-  return slug ? `${slug}-cv.png` : "perfil-cv.png";
+  return slug ? `${slug}-cv.png` : "profile-cv.png";
 }
