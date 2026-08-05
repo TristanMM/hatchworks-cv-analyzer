@@ -4,8 +4,8 @@
 
 - **Vitest** para pruebas unitarias de funciones puras (parsing, validación, transformación de
   datos).
-- **TestSprite** (integrado vía MCP en Cursor) para generación y ejecución automatizada de pruebas
-  end-to-end y de la API, y para detección de regresiones.
+- **Playwright** para pruebas end-to-end del flujo principal (subida, extracción, descarga y
+  edición). Ver `e2e/cv-analyzer.spec.ts`.
 
 ## Casos límite obligatorios (definir "hecho" para el pipeline de extracción)
 
@@ -38,5 +38,5 @@ No se busca 100% de cobertura (no es el foco del reto). Priorizar:
 - 100% de los casos límite de la lista de arriba cubiertos con al menos una prueba.
 - Cobertura razonable (no numérica estricta) de `/lib/extraction/*`, que es el corazón del 25% de
   "enfoque de extracción de datos" en la evaluación.
-- No es necesario cubrir componentes puramente visuales con pruebas unitarias; para esos, TestSprite
-  end-to-end es suficiente.
+- No es necesario cubrir componentes puramente visuales con pruebas unitarias; para esos, las pruebas
+  end-to-end con Playwright son suficientes.

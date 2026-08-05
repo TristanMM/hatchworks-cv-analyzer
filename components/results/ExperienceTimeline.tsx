@@ -179,7 +179,7 @@ function formatDateRange(
   return start ?? end;
 }
 
-function getRecencyScore(
+export function getRecencyScore(
   endDate: string | null,
   startDate: string | null
 ): number {
@@ -192,7 +192,7 @@ function getRecencyScore(
   return endYear ?? startYear ?? -1;
 }
 
-function extractLatestYear(...dates: (string | null)[]): number | null {
+export function extractLatestYear(...dates: (string | null)[]): number | null {
   const years = dates
     .flatMap((d) => (d ? [...d.matchAll(/\d{4}/g)] : []))
     .map((m) => Number(m[0]));

@@ -198,7 +198,7 @@ function buildContactItems(
   return items;
 }
 
-function buildTagline(data: CVData): string | null {
+export function buildTagline(data: CVData): string | null {
   const summary = data.summary?.trim();
   if (summary) return summary;
 
@@ -298,7 +298,7 @@ function normalizeUrl(url: string): string {
   return `https://${url}`;
 }
 
-function getInitials(name: string): string {
+export function getInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return "";
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();

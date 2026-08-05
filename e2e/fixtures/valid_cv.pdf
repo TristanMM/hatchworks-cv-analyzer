@@ -1,0 +1,87 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1084 >>
+stream
+BT
+/F1 11 Tf
+50 760 Td
+16 TL
+(Ana Garcia Lopez) Tj
+T*
+(Ingeniera de Software) Tj
+T*
+(Email: ana.garcia@example.com | Telefono: +52 55 1234 5678) Tj
+T*
+(Ubicacion: Ciudad de Mexico, Mexico) Tj
+T*
+() Tj
+T*
+(Resumen) Tj
+T*
+(Ingeniera de software con 6 anios de experiencia en desarrollo web) Tj
+T*
+(full-stack, especializada en aplicaciones React y Node.js.) Tj
+T*
+() Tj
+T*
+(Experiencia laboral) Tj
+T*
+(Ingeniera de Software Senior - Acme Corp) Tj
+T*
+(Enero 2021 - Presente) Tj
+T*
+(Lidere el desarrollo de una plataforma de analisis de datos usando) Tj
+T*
+(React, TypeScript y Node.js, mejorando el rendimiento en un 40%.) Tj
+T*
+() Tj
+T*
+(Desarrolladora de Software - Beta Soluciones) Tj
+T*
+(Marzo 2018 - Diciembre 2020) Tj
+T*
+(Desarrolle APIs REST y interfaces de usuario para clientes) Tj
+T*
+(empresariales usando JavaScript y PostgreSQL.) Tj
+T*
+() Tj
+T*
+(Educacion) Tj
+T*
+(Licenciatura en Ciencias de la Computacion) Tj
+T*
+(Universidad Nacional Autonoma de Mexico, 2013 - 2017) Tj
+T*
+() Tj
+T*
+(Habilidades) Tj
+T*
+(JavaScript, TypeScript, React, Node.js, PostgreSQL, Docker, AWS) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001377 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1447
+%%EOF

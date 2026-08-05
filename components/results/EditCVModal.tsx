@@ -38,7 +38,7 @@ function hasArrayChanged<T>(original: T[], edited: T[]): boolean {
  * sin cambios conservan su nivel original; nunca se degrada un valor "high"
  * (ver plan "Editar información del CV").
  */
-function promoteConfidence(original: CVData, edited: CVData): CVData["confidence"] {
+export function promoteConfidence(original: CVData, edited: CVData): CVData["confidence"] {
   const confidence = { ...edited.confidence };
 
   for (const field of SCALAR_CONFIDENCE_FIELDS) {

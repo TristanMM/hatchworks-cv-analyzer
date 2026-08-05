@@ -109,14 +109,14 @@ function getExperienceProjectStats(data: CVData): StatItem[] {
   return [{ value: "0", label: "Proyectos" }];
 }
 
-function calculateCompleteness(confidence: CVData["confidence"]): number {
+export function calculateCompleteness(confidence: CVData["confidence"]): number {
   const values = Object.values(confidence);
   if (values.length === 0) return 0;
   const highCount = values.filter((v) => v === "high").length;
   return Math.round((highCount / values.length) * 100);
 }
 
-function getMostRecentEducationStat(
+export function getMostRecentEducationStat(
   education: CVData["education"]
 ): { value: string; caption?: string } {
   if (education.length === 0) return { value: "—" };

@@ -141,3 +141,11 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Playwright (verificación e2e manual, ver e2e/cv-analyzer.spec.ts)
+/test-results/
+/e2e-report/
+/e2e-downloads/
+/playwright-report/
+/blob-report/
+

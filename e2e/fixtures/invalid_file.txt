@@ -1,0 +1,1 @@
+Este es un archivo de texto plano, no un PDF ni un DOCX. Se usa para probar el rechazo de tipos de archivo no soportados.
