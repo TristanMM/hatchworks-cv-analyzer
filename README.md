@@ -4,7 +4,29 @@ HatchWorks AI technical challenge submission — a CV analyzer that extracts str
 
 ## Screenshots
 
-<!-- Placeholder: upload flow, results view, download — add images under e.g. docs/screenshots/ -->
+### Upload screen
+
+![Upload screen — drag-and-drop CV upload](docs/screenshots/01-upload.png)
+
+The home page upload area where users drag or select a PDF or DOCX file.
+
+### Redesigned profile
+
+![Redesigned profile — extracted CV dashboard](docs/screenshots/02-redesigned-profile.png)
+
+The results view after extraction: profile header, stats cards, timeline, skills, and projects.
+
+### Edit modal
+
+![Edit modal — in-memory CV field editing](docs/screenshots/03-edit-modal.png)
+
+The edit modal for correcting extracted fields before finalizing the profile.
+
+### PDF export
+
+![PDF export — browser print preview of the profile](docs/screenshots/04-pdf-export.png)
+
+The print preview opened by "Download as PDF", showing the redesigned layout ready to save or print.
 
 ## Installation and local setup
 
